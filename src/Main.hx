@@ -1,5 +1,6 @@
 package;
 
+import openfl.display.FPS;
 import haxe.ds.Vector;
 import openfl.display.Bitmap;
 import openfl.display.JPEGEncoderOptions;
@@ -17,6 +18,7 @@ import openfl.net.URLRequestMethod;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.utils.ByteArray;
+import openfl.Vector;
 
 
 class Main extends Sprite {
@@ -153,6 +155,12 @@ class Main extends Sprite {
 		currentResultDisplay = new Bitmap();
 		this.addChild(currentResultDisplay);
 		
+		var fps_mem:FPS_Mem = new FPS_Mem(10, 300, 0xffffff);
+		addChild(fps_mem);
+
+		var fps:FPS = new FPS(10, 400, 0xffffff);
+		addChild(fps);
+
 		this.addEventListener(Event.ENTER_FRAME, progressStep, false, 0, true);
 		
 	} // end of constructor }

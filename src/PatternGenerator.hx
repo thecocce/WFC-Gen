@@ -152,7 +152,10 @@ class PatternGenerator {
 		for(pattern in 0...patterns.length){
 			// note that compare() can also return a BitmapData object if the results don't match...which != 0 so it still works
 			// but could be a source of type errors
-			if(patterns[pattern].compare(inputPattern) == 0){
+			var bd = patterns[pattern];
+			var res:Dynamic = bd.compare(inputPattern);
+			var isBitmapData = res is BitmapData;
+			if( !isBitmapData && (res == 0)){
 				return pattern;
 			}
 		}
@@ -167,7 +170,7 @@ class PatternGenerator {
 	
 	
 	// should go through each offset coord and at each one, check if a pattern matches
-	private function buildOverlapRules():Void {
+	private inline function buildOverlapRules():Void {
 		
 		// index goes: <input pattern><offset index><other pattern index>
 		overlapRules = new Vector<Vector<Vector<Bool>>>(patterns.length);
@@ -186,7 +189,7 @@ class PatternGenerator {
 	
 	// can make a more efficent method that handles multiple offset patterns and returns an array instead...
 	// checks the overlap for a pattern with another pattern with an offset on the second pattern
-	private function checkOverlaps(mainPatternIndex:Int, offsetX:Int, offsetY:Int):Vector<Bool> {
+	private inline function checkOverlaps(mainPatternIndex:Int, offsetX:Int, offsetY:Int):Vector<Bool> {
 		
 		// slice size x/y
 		var sliceWidth:Int = Std.int(-Math.abs(offsetX) + patternSize);
@@ -215,7 +218,11 @@ class PatternGenerator {
 		var result:Vector<Bool> = new Vector<Bool>(patterns.length);
 		for(counter in 0...patterns.length){
 			offsetPatternSlice.copyPixels(patterns[counter], rect, zeroPoint);
-			result[counter] = ((mainPatternSlice.compare(offsetPatternSlice)) == 0);
+
+			var res:Dynamic = mainPatternSlice.compare(offsetPatternSlice);
+			var isBitmapData = res is BitmapData;
+
+			result[counter] = (!isBitmapData && res == 0);
 		}
 		return result;
 		
